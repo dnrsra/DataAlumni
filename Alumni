@@ -1,0 +1,212 @@
+import java.util.*;
+
+class Alumni {
+    private String nama;
+    private String jenisKelamin;
+    private String statusLulus;
+    private String namaPerguruanTinggi;
+
+
+    //Konstruktor ini digunakan untuk membuat objek Alumni dan menginisialisasi nilai dari atribut-atributnya
+    public Alumni(String nama, String jenisKelamin, String statusLulus, String namaPerguruanTinggi) {
+        this.nama = nama;
+        this.jenisKelamin = jenisKelamin;
+        this.statusLulus = statusLulus;
+        this.namaPerguruanTinggi = namaPerguruanTinggi;
+    }
+
+    //h untuk mengakses nilai dari atribut-atribut objek Alumni. Setiap metode getter mengembalikan nilai dari atribut yang sesuai.
+    public String getNama() {
+        return nama;
+    }
+
+    public String getJenisKelamin() {
+        return jenisKelamin;
+    }
+
+    public String getStatusLulus() {
+        return statusLulus;
+    }
+
+    public String getNamaPerguruanTinggi() {
+        return namaPerguruanTinggi;
+    }
+}
+
+class PendataanAlumni {
+    public ArrayList<Alumni> alumniList;
+    private HashMap<String, Integer> jumlahStatusLulus;
+    private HashMap<String, Integer> jumlahJenisKelaminL;
+
+    public PendataanAlumni() {
+        alumniList = new ArrayList<>();
+        jumlahStatusLulus = new HashMap<>();
+        jumlahJenisKelaminL = new HashMap<>();
+    }
+    
+    public void addAlumni(String nama, String jenisKelamin, String statusLulus, String namaPerguruanTinggi) {
+        Alumni alumni = new Alumni(nama, jenisKelamin, statusLulus, namaPerguruanTinggi);
+        alumniList.add(alumni);
+        
+        int jumlahStatus = jumlahStatusLulus.getOrDefault(statusLulus, 0);
+        jumlahStatusLulus.put(statusLulus, jumlahStatus + 1);
+
+        int jumlahKelaminL = jumlahJenisKelaminL.getOrDefault(jenisKelamin, 0);
+        jumlahJenisKelaminL.put(jenisKelamin, jumlahKelaminL + 1);
+    }
+    
+    public int getJumlahAlumni() {
+        return alumniList.size();
+       
+    }
+
+    public int getJumlahSiswaLakiLaki() {
+        return jumlahJenisKelaminL.getOrDefault("L", 0);
+    }
+
+    public int getJumlahSiswaPerempuan() {
+        return jumlahJenisKelaminL.getOrDefault("P", 0);
+    }
+
+    public int getJumlahKuliah() {
+        return jumlahStatusLulus.getOrDefault("Kuliah", 0);
+    }
+
+    public int getJumlahAlumniTidakMeneruskanKuliah() {
+        int count = 0;
+        for (Alumni alumni : alumniList) {
+            if (alumni.getStatusLulus().equalsIgnoreCase("Bekerja")) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public ArrayList<Alumni> getAlumniByStatusLulus(String statusLulus) {
+        ArrayList<Alumni> alumniByStatus = new ArrayList<>();
+        for (Alumni alumni : alumniList) {
+            if (alumni.getStatusLulus().equalsIgnoreCase(statusLulus)) {
+                alumniByStatus.add(alumni);
+            }
+        }
+        return alumniByStatus;
+    }
+}
+
+//class main
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        PendataanAlumni pendataanAlumni = new PendataanAlumni();
+        Scanner scanner = new Scanner(System.in);
+
+        // Penambahan data
+        pendataanAlumni.addAlumni("dinar surya aditya", "P", "Kuliah", "Politeknik Negeri Banyuwangi");
+        pendataanAlumni.addAlumni("erlangga putra wijaya", "L", "Kuliah", "Universitas Gadjah Mada");
+        pendataanAlumni.addAlumni("vina lailia", "P", "Kuliah", "Universitas Jember");
+        pendataanAlumni.addAlumni("rindi wahyuning", "P", "Bekerja", "-");
+        pendataanAlumni.addAlumni("tiyarmi", "P", "Bekerja", "-");
+        pendataanAlumni.addAlumni("bayu rimba", "L", "Bekerja", "-");
+        pendataanAlumni.addAlumni("tri nurasih", "P", "Kuliah", "Politeknik Negeri Jember");
+        pendataanAlumni.addAlumni("al haidar", "L", "Kuliah", "Universitas Indonesia");
+        pendataanAlumni.addAlumni("chandra", "L", "Kuliah", "Universitas Negeri Semarang");
+        pendataanAlumni.addAlumni("sarah", "P", "Kuliah", "Universitas Udayana");
+
+
+        while (true) {
+            System.out.println("Menu:");
+            System.out.println("1. Tambah Data Alumni");
+            System.out.println("2. Tampilkan Detail Alumni");
+            System.out.println("3. Tampilkan Jumlah Alumni Laki-laki");
+            System.out.println("4. Tampilkan Jumlah Alumni Perempuan");
+            System.out.println("5. Tampilkan Jumlah Alumni Kuliah");
+            System.out.println("6. Tampilkan Jumlah Alumni Tidak Meneruskan Kuliah");
+            System.out.println("7. Keluar");
+            System.out.print("Masukkan pilihan menu: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Masukkan Nama: ");
+                    String nama = scanner.nextLine();
+                    System.out.print("Masukkan Jenis Kelamin (L/P): ");
+                    String jenisKelamin = scanner.nextLine();
+                    System.out.print("Masukkan Status Lulus: ");
+                    String statusLulus = scanner.nextLine();
+                    System.out.print("Masukkan Nama Perguruan Tinggi: ");
+                    String namaPerguruanTinggi = scanner.nextLine();
+
+                    pendataanAlumni.addAlumni(nama, jenisKelamin, statusLulus, namaPerguruanTinggi);
+                    System.out.println("Data alumni berhasil ditambahkan!");
+                    break;
+                case 2:
+                    System.out.println("Jumlah Alumni: " + pendataanAlumni.getJumlahAlumni());
+                    System.out.println("Detail Alumni:");
+                    for (Alumni alumni : pendataanAlumni.alumniList) {
+                        System.out.println("Nama: " + alumni.getNama());
+                        System.out.println("Jenis Kelamin: " + alumni.getJenisKelamin());
+                        System.out.println("Status Lulus: " + alumni.getStatusLulus());
+                        System.out.println("Nama Perguruan Tinggi: " + alumni.getNamaPerguruanTinggi());
+                        System.out.println("----------------------------------------------");
+                    }
+                    break;
+                case 3:
+                    System.out.println("Jumlah Siswa Laki-laki: " + pendataanAlumni.getJumlahSiswaLakiLaki());
+                    System.out.println("Detail Alumni Laki-laki:");
+                    for (Alumni alumni : pendataanAlumni.alumniList) {
+                        if (alumni.getJenisKelamin().equalsIgnoreCase("L")) {
+                            System.out.println("Nama: " + alumni.getNama());
+                            System.out.println("Status Lulus: " + alumni.getStatusLulus());
+                            System.out.println("Nama Perguruan Tinggi: " + alumni.getNamaPerguruanTinggi());
+                            System.out.println("----------------------------------------------");
+                        }
+                    }
+                    break;
+                case 4:
+                    System.out.println("Jumlah Siswa Perempuan: " + pendataanAlumni.getJumlahSiswaPerempuan());
+                    System.out.println("Detail Alumni Perempuan:");
+                    for (Alumni alumni : pendataanAlumni.alumniList) {
+                        if (alumni.getJenisKelamin().equalsIgnoreCase("P")) {
+                            System.out.println("Nama: " + alumni.getNama());
+                            System.out.println("Status Lulus: " + alumni.getStatusLulus());
+                            System.out.println("Nama Perguruan Tinggi: " + alumni.getNamaPerguruanTinggi());
+                            System.out.println("----------------------------------------------");
+                        }
+                    }
+                    break;
+                case 5:
+                    ArrayList<Alumni> alumniKuliah = pendataanAlumni.getAlumniByStatusLulus("Kuliah");
+                    System.out.println("Jumlah Alumni Meneruskan Kuliah: " + pendataanAlumni.getJumlahKuliah());
+                    System.out.println("Detail Alumni Meneruskan Kuliah:");
+                    for (Alumni alumni : alumniKuliah) {
+                        System.out.println("Nama: " + alumni.getNama());
+                        System.out.println("Status Lulus: " + alumni.getStatusLulus());
+                        System.out.println("Nama Perguruan Tinggi: " + alumni.getNamaPerguruanTinggi());
+                        System.out.println("----------------------------------------------");
+                    }
+                    break;
+                case 6:
+                    System.out.println("Jumlah Alumni Tidak Meneruskan Kuliah : " + pendataanAlumni.getJumlahAlumniTidakMeneruskanKuliah());
+                    System.out.println("Detail Alumni Tidak Meneruskan Kuliah :");
+                    for (Alumni alumni : pendataanAlumni.alumniList) {
+                        if (alumni.getStatusLulus().equalsIgnoreCase("Tidak Meneruskan Kuliah") || alumni.getStatusLulus().equalsIgnoreCase("Bekerja")) {
+                            System.out.println("Nama: " + alumni.getNama());
+                            System.out.println("Jenis Kelamin: " + alumni.getJenisKelamin());
+                            System.out.println("----------------------------------------------");
+                        }
+                    }
+                    break;
+                case 7:
+                    System.out.println("Terima kasih!");
+                    System.exit(0);
+                default:
+                    System.out.println("Pilihan menu tidak valid.");
+                    break;
+            }
+        }
+    }
+}
